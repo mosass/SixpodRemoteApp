@@ -39,25 +39,6 @@ namespace SixpodRemoteApp
             rdo_wave.IsChecked = true;
         }
 
-        private void btn_connect_Click(object sender, RoutedEventArgs e)
-        {
-            remoteRobot.setIpAddress(txt_ipaddress.Text);
-
-            if (remoteRobot.logs_recv_flag)
-            {
-                remoteRobot.logs_recv_flag = false;
-                remoteRobot.StopClient();
-            }
-            else
-            {
-                new Task(() => {
-                    remoteRobot.StartClient();
-                    remoteRobot.StartDebugClient();
-                }).Start();
-
-            }
-        }
-
         private void txt_log_TextChanged(object sender, TextChangedEventArgs e)
         {
             txt_log.ScrollToEnd();
@@ -76,7 +57,7 @@ namespace SixpodRemoteApp
         private void btn_apply_Click(object sender, RoutedEventArgs e)
         {
             // if connected
-            if (remoteRobot.logs_recv_flag)
+            if (remoteRobot.remote_flag)
             {
                 float step_time_val = (float) (sld_stepTime.Value / 10f);
                 float stepZUp_val = (float) (sld_gaitZPercent.Value / 100f);
@@ -87,7 +68,7 @@ namespace SixpodRemoteApp
 
         private void btn_walking_Click(object sender, RoutedEventArgs e)
         {
-            if(remoteRobot.logs_recv_flag)
+            if(remoteRobot.remote_flag)
             {
                 if (walking)
                 {
@@ -134,6 +115,39 @@ namespace SixpodRemoteApp
             if(lsb_filename.SelectedIndex >= 0)
             {
                 remoteRobot.sendCmd(REMOTECMD.SET_SELECT_POS, lsb_filename.SelectedIndex + 1);
+            }
+        }
+
+        private void btn_connectLogs_Click(object sender, RoutedEventArgs e)
+        {
+            remoteRobot.setIpAddress(txt_ipaddress.Text);
+
+            if (remoteRobot.logs_recv_flag)
+            {
+                remoteRobot.logs_recv_flag = false;
+            }
+            else
+            {
+                new Task(() =>
+                {
+                    remoteRobot.StartDebugClient();
+                }).Start();
+            }
+        }
+
+        private void btn_connectRemote_Click(object sender, RoutedEventArgs e)
+        {
+            remoteRobot.setIpAddress(txt_ipaddress.Text);
+
+            if (remoteRobot.remote_flag)
+            {
+                remoteRobot.StopClient();
+            }
+            else
+            {
+                new Task(() => {
+                    remoteRobot.StartClient();
+                }).Start();
             }
         }
     }

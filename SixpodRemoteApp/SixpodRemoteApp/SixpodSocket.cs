@@ -29,6 +29,7 @@ namespace SixpodRemoteApp
         private const int debugPort = 9001;
 
         public bool logs_recv_flag { get; set; }
+        public bool remote_flag { get; set; }
 
         public SixpodSocket(String Ip, MainWindow Window)
         {
@@ -36,6 +37,7 @@ namespace SixpodRemoteApp
             remoteIpAddress = IPAddress.Parse(Ip);
 
             logs_recv_flag = false;
+            remote_flag = false;
         }
 
         public void setIpAddress(string Ip)
@@ -81,8 +83,26 @@ namespace SixpodRemoteApp
             win.txt_statusmsg.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
                 new Action(() => win.txt_statusmsg.Content = lbl_status));
 
-            win.btn_connect.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
-                new Action(() => win.btn_connect.Content = btn_status));
+            win.btn_connectLogs.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                new Action(() => win.btn_connectLogs.Content = btn_status));
+        }
+
+        private void setUIRemoteOnlineStatus(bool onlineStatus)
+        {
+            string btn_status;
+            if (onlineStatus)
+            {
+                btn_status = "Disconnect Remote";
+                remote_flag = true;
+            }
+            else
+            {
+                btn_status = "Connect Remote";
+                remote_flag = false;
+            }
+
+            win.btn_connectRemote.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
+                new Action(() => win.btn_connectRemote.Content = btn_status));
         }
 
         public void StartClient()
@@ -103,29 +123,34 @@ namespace SixpodRemoteApp
                     Console.WriteLine("Socket connected to {0}",
                         remoteSocket.RemoteEndPoint.ToString());
 
-                    logsLine("Socket connected to " + remoteSocket.RemoteEndPoint.ToString());
+                    setUIRemoteOnlineStatus(true);
+
+                    logsLine("Remote connected");
                 }
                 catch (ArgumentNullException ane)
                 {
                     Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
-                    logsLine("ArgumentNullException : " + ane.ToString());
+                    logsLine("Remote connect error");
+                    setUIRemoteOnlineStatus(false);
                 }
                 catch (SocketException se)
                 {
                     Console.WriteLine("SocketException : {0}", se.ToString());
-                    logsLine("SocketException : " + se.ToString());
+                    logsLine("Remote connect error");
+                    setUIRemoteOnlineStatus(false);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Unexpected exception : {0}", e.ToString());
-                    logsLine("Unexpected exception : " + e.ToString());
+                    logsLine("Remote connect error");
+                    setUIRemoteOnlineStatus(false);
                 }
 
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                logsLine(e.ToString());
+                logsLine("Remote connect error");
             }
         }
 
@@ -137,21 +162,23 @@ namespace SixpodRemoteApp
                 // Release the socket.  
                 remoteSocket.Shutdown(SocketShutdown.Both);
                 remoteSocket.Close();
+                logsLine("Remote disconnect");
+                setUIRemoteOnlineStatus(false);
             }
             catch (ArgumentNullException ane)
             {
                 Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
-                logsLine("ArgumentNullException : " + ane.ToString());
+                logsLine("Remote connect error");
             }
             catch (SocketException se)
             {
                 Console.WriteLine("SocketException : {0}", se.ToString());
-                logsLine("SocketException : " + se.ToString());
+                logsLine("Remote connect error");
             }
             catch (Exception e)
             {
                 Console.WriteLine("Unexpected exception : {0}", e.ToString());
-                logsLine("Unexpected exception : " + e.ToString());
+                logsLine("Remote connect error");
             }
         }
 
@@ -249,27 +276,19 @@ namespace SixpodRemoteApp
                 {
                     sender.Connect(remoteEP);
 
-                    Console.WriteLine("Socket connected to {0}",
+                    Console.WriteLine("Log connected to {0}",
                         sender.RemoteEndPoint.ToString());
 
-                    logsLine("Socket connected to " + sender.RemoteEndPoint.ToString());
+                    logsLine("Log connected");
 
                     setUIOnlineStatus(true);
-
-                    // Encode the data string into a byte array.  
-                    //byte[] msg = Encoding.ASCII.GetBytes("GetLogs" + Environment.NewLine);
-
-                    // Send the data through the socket.  
-                    //int bytesSent = sender.Send(msg);
 
                     while (logs_recv_flag)
                     {
                         // Receive the response from the remote device.
-
                         int bytesRec = sender.Receive(bytes);
-                        Console.WriteLine("Echoed test = {0}",
+                        Console.WriteLine("{0}",
                                     Encoding.ASCII.GetString(bytes, 0, bytesRec));
-
                         logsLine(Encoding.ASCII.GetString(bytes, 0, bytesRec));
                     }
 

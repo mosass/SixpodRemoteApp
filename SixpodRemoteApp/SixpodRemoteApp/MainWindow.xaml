@@ -12,7 +12,8 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 <Grid Margin="10,10,130,0" Height="110" VerticalAlignment="Top">
                     <Label Content="IP Address" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top"/>
                     <TextBox x:Name="txt_ipaddress" Margin="92,20,15,0" TextWrapping="Wrap" Text="192.168.3.100" VerticalContentAlignment="Center" Height="23" VerticalAlignment="Top"/>
-                    <Button x:Name="btn_connect" Content="Connect" Margin="0,64,15,0" VerticalAlignment="Top" Height="26" Click="btn_connect_Click" HorizontalAlignment="Right" Width="80"/>
+                    <Button x:Name="btn_connectLogs" Content="Connect LogSever" Margin="0,64,15,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Right" Width="111" Click="btn_connectLogs_Click"/>
+                    <Button x:Name="btn_connectRemote" Content="Connect Remote" Margin="0,64,131,0" VerticalAlignment="Top" Height="26" HorizontalAlignment="Right" Width="125" Click="btn_connectRemote_Click"/>
                 </Grid>
                 <TextBox x:Name="txt_log" Margin="10,120,10,10" TextWrapping="Wrap" TextChanged="txt_log_TextChanged"/>
             </Grid>
