@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -274,6 +276,12 @@ namespace SixpodRemoteApp
                 // Connect the socket to the remote endpoint. Catch any errors.  
                 try
                 {
+                    SaveFileDialog svfile = new SaveFileDialog();
+                    svfile.Filter = "CSV Files |*.csv";
+                    svfile.ShowDialog();
+                    StreamWriter swfile;
+                    swfile = new StreamWriter(svfile.FileName, true);
+
                     sender.Connect(remoteEP);
 
                     Console.WriteLine("Log connected to {0}",
@@ -290,8 +298,11 @@ namespace SixpodRemoteApp
                         Console.WriteLine("{0}",
                                     Encoding.ASCII.GetString(bytes, 0, bytesRec));
                         logsLine(Encoding.ASCII.GetString(bytes, 0, bytesRec));
+
+                        swfile.Write(Encoding.ASCII.GetString(bytes, 0, bytesRec));
                     }
 
+                    swfile.Close();
                     // Release the socket.  
                     sender.Shutdown(SocketShutdown.Both);
                     sender.Close();
@@ -300,19 +311,19 @@ namespace SixpodRemoteApp
                 catch (ArgumentNullException ane)
                 {
                     Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
-                    logsLine("ArgumentNullException : " + ane.ToString());
+                    logsLine("Log connect error");
                     setUIOnlineStatus(false);
                 }
                 catch (SocketException se)
                 {
                     Console.WriteLine("SocketException : {0}", se.ToString());
-                    logsLine("SocketException : " + se.ToString());
+                    logsLine("Log connect error");
                     setUIOnlineStatus(false);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine("Unexpected exception : {0}", e.ToString());
-                    logsLine("Unexpected exception : " + e.ToString());
+                    logsLine("Log connect error");
                     setUIOnlineStatus(false);
                 }
 
