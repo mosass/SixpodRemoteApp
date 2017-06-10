@@ -1,12 +1,38 @@
 ﻿<Window x:Class="SixpodRemoteApp.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SixpodRemoteApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="SixpodRemoteApp" Height="460" Width="555" MinWidth="550" MinHeight="455" UseLayoutRounding="False" Initialized="Window_Initialized">
+    <TabControl>
+        <TabItem Header="Connection">
+            <Grid>
+                <Label x:Name="txt_statusmsg" Content="Offline" Margin="0,10,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="100" FontWeight="Bold" FontSize="20" BorderBrush="#FFD5DFE5" BorderThickness="1" HorizontalAlignment="Right" Width="98"/>
+                <Grid Margin="10,10,130,0" Height="110" VerticalAlignment="Top">
+                    <Label Content="IP Address" HorizontalAlignment="Left" Margin="10,19,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="txt_ipaddress" Margin="92,20,15,0" TextWrapping="Wrap" Text="192.168.3.100" VerticalContentAlignment="Center" Height="23" VerticalAlignment="Top"/>
+                    <Button x:Name="btn_connect" Content="Connect" Margin="0,64,15,0" VerticalAlignment="Top" Height="26" Click="btn_connect_Click" HorizontalAlignment="Right" Width="80"/>
+                </Grid>
+                <TextBox x:Name="txt_log" Margin="10,120,10,10" TextWrapping="Wrap" TextChanged="txt_log_TextChanged"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Controls">
+            <Grid>
+                <Slider x:Name="sld_stepTime" Margin="49,41,90,0" VerticalAlignment="Top" SmallChange="1" ValueChanged="sld_stepTime_ValueChanged"/>
+                <Label Content="Step Time" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="txt_set_stepTime" Height="23" Margin="0,36,10,0" TextWrapping="Wrap" Text="0.00" VerticalAlignment="Top" SelectionOpacity="0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="75"/>
+                <Label Content="Gait Z (%)" HorizontalAlignment="Left" Margin="10,68,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="txt_set_gaitZPercent" Height="23" Margin="0,94,10,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" SelectionOpacity="0" IsEnabled="False" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="75"/>
+                <Button x:Name="btn_apply" Content="Apply" Margin="0,134,10,0" VerticalAlignment="Top" Click="btn_apply_Click" HorizontalAlignment="Right" Width="75"/>
+                <RadioButton x:Name="rdo_tripod" Content="Tripod Gait" HorizontalAlignment="Right" Margin="0,272,52,0" VerticalAlignment="Top" Checked="rdo_tripod_Checked"/>
+                <RadioButton x:Name="rdo_wave" Content="Wave Gait" HorizontalAlignment="Right" Margin="0,199,57,0" VerticalAlignment="Top" Checked="rdo_wave_Checked"/>
+                <RadioButton x:Name="rdo_ripple" Content="Ripple Gait" HorizontalAlignment="Right" Margin="0,234,52,0" VerticalAlignment="Top" Checked="rdo_ripple_Checked"/>
+                <Button x:Name="btn_walking" Content="Start" Margin="0,314,10,0" Click="btn_walking_Click" HorizontalAlignment="Right" Width="119" Height="45" VerticalAlignment="Top" FontSize="22"/>
+                <Slider x:Name="sld_gaitZPercent" Margin="49,99,90,0" VerticalAlignment="Top" SmallChange="1" ValueChanged="sld_gaitZPercent_ValueChanged"/>
+                <Button x:Name="btn_updatefilelist" Content="Update list" HorizontalAlignment="Left" Margin="10,174,0,0" VerticalAlignment="Top" Width="75" Click="btn_updatefilelist_Click"/>
+                <ListBox x:Name="lsb_filename" HorizontalAlignment="Left" Height="160" Margin="10,199,0,0" VerticalAlignment="Top" Width="284" SelectionChanged="lsb_filename_SelectionChanged"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>
